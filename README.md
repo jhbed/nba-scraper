@@ -6,8 +6,9 @@ An API for pulling datasets from Basketball-reference.com
 
 ```python
 
-#get the latest advanced player stats as a Pandas DataFrame
 from nba_scraper.get_players import get_players
+
+#get the latest advanced player stats as a Pandas DataFrame
 players = get_players()
 
 #get a specific year
