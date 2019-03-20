@@ -1,10 +1,14 @@
 from requests_html import HTMLSession
 import pandas as pd  
 import datetime as dt
-from .util import scrape_url_for_table
+from .util import  export_to_csv
+from .scrapers import scrape_url_for_table
 
 def get_players_advanced_stats(year=None, csv=None, playernames=None):
     '''
+    
+    returns primary player season aggregated stats in a pandas dataframe
+
     Inputs: 
         url (str) - the url that the desired table lives. If none, url is supplied internally
         year (int) - year desired, if none, current year is supplied
@@ -29,6 +33,10 @@ def get_players_advanced_stats(year=None, csv=None, playernames=None):
 
 def get_team_per_game_stats(year=None, csv=None):
     '''
+    TODO: Append oppenent stats on the end of this dataframe
+
+    Returns primary per game stats for each time in a pandas dataframe
+
     Inputs: 
         url (str) - the url that the desired table lives. If none, url is supplied internally
         year (int) - year desired, if none, current year is supplied
@@ -68,7 +76,7 @@ def get_games(year=None, csv=None, verbose=False):
                                   year=year, 
                                   table_selector='table#schedule', 
                                   non_numeric_columns=None, 
-                                  csv=csv,
+                                  csv=False,
                                   fillna=False,
                                   url_field='box_score_text')
         if df_all is None:
@@ -80,6 +88,9 @@ def get_games(year=None, csv=None, verbose=False):
 
     df_all.reset_index(drop=True, inplace=True)
     df_all['url'] = pd.Series(all_urls)
+
+    if csv:
+        export_to_csv(df_all, year)
     
     return df_all
 
