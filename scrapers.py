@@ -3,6 +3,8 @@ import pandas as pd
 import datetime as dt
 from .util import get_year_and_url, export_to_csv
 
+
+
 def parse_table(selector, url_field=None):
     '''
     Inputs: 
@@ -12,7 +14,7 @@ def parse_table(selector, url_field=None):
     '''
     urls = []
     html_table = selector.find('tbody', first=True)
-    thead = selector.find('thead', first=True).find('tr', first=True)
+    thead = selector.find('thead', first=True).find('tr')[-1]
 
     headings = [heading.attrs['data-stat'] for heading in thead.find('th')]
 
@@ -27,7 +29,7 @@ def parse_table(selector, url_field=None):
             ranker = row.find('th', first=True)
             ranker_ident = ranker.attrs['data-stat']
             
-            if ranker.text == 'Rk':
+            if ranker.text in ['Rk', 'Reserves']:
                  continue
                     
             cols = row.find('td')        
@@ -36,6 +38,11 @@ def parse_table(selector, url_field=None):
 
             for col in cols:
                 heading = col.attrs['data-stat']
+
+                if heading == 'reason':
+                    del table[ranker_ident][-1]
+                    continue
+
                 table[heading].append(col.text)
 
                 if url_field is not None:
@@ -65,7 +72,8 @@ def scrape_url_for_table(internal_url,
                          non_numeric_columns, 
                          csv, 
                          fillna=True,
-                         url_field=None):
+                         url_field=None,
+                         scraper_func=None):
     '''
     Inputs: 
         internal_url (str) - an interpolateable url that is used by default if url is not provided

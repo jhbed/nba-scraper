@@ -4,6 +4,10 @@
 
 Data is scraped, compiled, cleansed, and returned in a neat table (Pandas DataFrame) ready for analysis. No signup or API keys required.
 
+### Dependencies:
+ - pandas
+ - requests_HTML
+
 ### Usage:
 
 ```python
@@ -49,9 +53,13 @@ players = get_players_advanced_stats(csv=True)
 ```python
 from nba_scraper.get_data import get_games, get_team_per_game_stats
 
-#Returns all the games for a given season with basic statistics
-games = get_games(year=1989)
 
 #returns all team aggregated stats for a given season
 teams = get_team_per_game_stats(year=2019)
 ```
+
+### Current Work In Progress:
+ - nba_scraper.get_data.get_games
+
+
+

@@ -94,10 +94,38 @@ def get_games(year=None, csv=None, verbose=False):
     
     return df_all
 
-    # main_url = 'https://www.basketball-reference.com'
-    # for url in urls:
-    #   full_url = main_url + url 
-    #   print(full_url)
+
+
+def get_all_games_stats(year=None, csv=None, verbose=False):
+
+    df = get_games(year, csv, verbose)
+    print('made it past get_games')
+
+    home_fg_percent = []
+    away_fg_percent = []
+    for index, row in df.iterrows():
+
+        full_url = 'https://www.basketball-reference.com' + row['url']
+        sym = full_url.split('.')[-2][-3:].lower()
+        selector = f'table#box_{sym}_basic'
+
+        #defaults for the home team, do this func again for the away team
+        #you're going to have to figure out how to get the away team table
+        fg_table = scrape_url_for_table(internal_url=full_url, 
+                                        url=None, 
+                                        year=year, 
+                                        table_selector=selector, 
+                                        non_numeric_columns=None, 
+                                        csv=False,
+                                        fillna=False,
+                                        url_field=None)
+        print('parsed url:', row['url'])
+        print(fg_table.head())
+
+
+
+
+
 
 
 
